@@ -3,145 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>vacancyHai.Age Calculator</title>
+    <title>Detailed Age Calculator</title>
     <style>
-        /* CSS for the calculator's appearance */
+        /* आपका मौजूदा CSS यहाँ है */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4; /* Light background for the iframe content */
-            display: flex; /* Helps center the calculator */
-            justify-content: center;
-            align-items: flex-start; /* Align to the top */
-            min-height: calc(100vh - 40px); /* Adjust height for padding */
-            box-sizing: border-box; /* Include padding in height calculation */
-        }
-        .calculator-container {
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 600px;
-            width: 100%; /* Ensure it takes full width up to max-width */
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin: 0; /* Remove default margins if any from body flex */
-        }
-        h3 {
-            color: #333;
-            margin-top: 0;
-            text-align: center;
-            font-size: 1.8em;
-            margin-bottom: 25px;
-        }
-        .input-group {
+            padding: 10px; /* यहाँ पैडिंग को थोड़ा कम करें, ताकि कंटेंट का आकार कम हो */
+            background-color: #f4f4f4;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .input-field {
-            flex: 1 1 48%; /* Allows two fields per row on larger screens */
-            min-width: 280px; /* Ensures fields don't get too small */
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
-            font-size: 1.1em;
-        }
-        input[type="date"] {
-            width: calc(100% - 20px); /* Account for padding */
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1em;
-            box-sizing: border-box; /* Include padding in width calculation */
-        }
-        button {
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.1em;
-            width: 100%;
-            transition: background-color 0.3s ease;
-            margin-bottom: 10px; /* Added margin */
-        }
-        button:hover {
-            opacity: 0.9;
-        }
-        .calculate-btn {
-            background-color: #28a745;
-        }
-        .generate-link-btn {
-            background-color: #007bff;
-            padding: 10px 18px; /* Slightly smaller padding for link button */
-            font-size: 1em;
-        }
-        #detailed_error_revised {
-            color: red;
-            margin-top: 15px;
-            text-align: center;
-            font-size: 0.95em;
-        }
-        #detailed_result_revised {
-            margin-top: 25px;
-        }
-        .link-generator-section {
-            margin-top: 25px;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            font-size: 0.95em;
-        }
-        table th, table td {
-            padding: 8px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-        table th {
-            background-color: #f2f2f2;
-            font-size: 1.1em;
-            color: #333;
-        }
-        table tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        #generated_link_input_revised {
-            width: calc(100% - 10px); /* Adjust for padding in its own styling */
-            padding: 5px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            font-size: 0.9em;
-            margin-top: 5px;
+            justify-content: center;
+            align-items: flex-start;
             box-sizing: border-box;
         }
-        #generated_link_text_revised {
-            margin-top: 10px;
-            font-size: 0.9em;
-            color: #666;
-            word-break: break-all; /* Ensures long links don't break layout */
+        .calculator-container {
+            /* ... आपके मौजूदा स्टाइल ... */
+            max-width: 600px; /* सुनिश्चित करें कि यह यहाँ भी सेट है */
+            width: 100%;
         }
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            .input-field {
-                flex: 1 1 100%; /* Stack inputs on small screens */
-                min-width: unset; /* Remove min-width constraint */
-            }
-        }
+        /* ... बाकी CSS ... */
     </style>
 </head>
 <body>
     <div class="calculator-container" id="age_calculator_section">
-        <h3>vacancyHai.Age Calculator</h3>
+        <h3>Detailed Age Calculator</h3>
 
         <div class="input-group">
             <div class="input-field">
@@ -170,6 +55,7 @@
     </div>
 
     <script>
+        // आपका मौजूदा JavaScript कोड यहाँ है (DOMContentLoaded, calculateDetailedAgeRevised, generateAgeLinkRevised, getUrlParameterRevised फंक्शन्स)
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date();
             const year = today.getFullYear();
@@ -187,17 +73,17 @@
                 linkDobInput.value = todayString;
             }
 
-            // Attempt to pre-fill DOB from URL on page load
             const initialDob = getUrlParameterRevised('dob_revised');
             const dobDateInput = document.getElementById('dob_date_revised');
             if (initialDob && dobDateInput) {
                 dobDateInput.value = initialDob;
-                // If a DOB is provided in the URL, calculate age automatically
                 calculateDetailedAgeRevised();
             }
+
+            sendIframeHeight(); // जब DOM पूरी तरह लोड हो जाए, तो एक बार ऊंचाई भेजें
         });
 
-        // Main calculation function
+        // Main calculation function (इसमें `sendIframeHeight()` कॉल जोड़ें)
         function calculateDetailedAgeRevised() {
             const dobInput = document.getElementById('dob_date_revised');
             const findAgeOnInput = document.getElementById('find_age_on_date_revised');
@@ -212,21 +98,24 @@
 
             if (!dobValue) {
                 errorDiv.textContent = 'Please enter a valid Date of Birth.';
+                sendIframeHeight(); // एरर पर भी ऊंचाई अपडेट करें
                 return;
             }
             if (!targetDateValue) {
                 errorDiv.textContent = 'Please enter a valid "Find Age on" date.';
+                sendIframeHeight(); // एरर पर भी ऊंचाई अपडेट करें
                 return;
             }
 
             const dob = new Date(dobValue);
             const targetDate = new Date(targetDateValue);
 
-            dob.setHours(0, 0, 0, 0); // Normalize to start of the day
-            targetDate.setHours(0, 0, 0, 0); // Normalize to start of the day
+            dob.setHours(0, 0, 0, 0);
+            targetDate.setHours(0, 0, 0, 0);
 
             if (dob > targetDate) {
                 errorDiv.textContent = 'Date of Birth cannot be after the "Find Age on" date.';
+                sendIframeHeight(); // एरर पर भी ऊंचाई अपडेट करें
                 return;
             }
 
@@ -389,9 +278,10 @@
                 </table>
             `;
             resultDiv.innerHTML = html;
+            sendIframeHeight(); // रिजल्ट अपडेट होने के बाद ऊंचाई अपडेट करें
         }
 
-        // Link generation function
+        // Link generation function (इसमें `sendIframeHeight()` कॉल जोड़ें)
         function generateAgeLinkRevised() {
             const linkDobInput = document.getElementById('link_dob_date_revised');
             const generatedLinkText = document.getElementById('generated_link_text_revised');
@@ -401,6 +291,7 @@
             if (!dobValue) {
                 generatedLinkText.textContent = 'Please select a Date of Birth to generate a link.';
                 generatedLinkText.style.color = 'red';
+                sendIframeHeight(); // एरर पर भी ऊंचाई अपडेट करें
                 return;
             }
 
@@ -412,18 +303,18 @@
             inputFieldForCopy.value = generatedLink;
             inputFieldForCopy.style.cssText = 'width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; font-size: 0.9em; margin-top: 5px;';
             inputFieldForCopy.readOnly = true;
-            inputFieldForCopy.id = 'generated_link_input_revised'; // Unique ID for the input field
+            inputFieldForCopy.id = 'generated_link_input_revised';
 
             generatedLinkText.innerHTML = 'Copy this link: ';
             generatedLinkText.appendChild(inputFieldForCopy);
             generatedLinkText.style.color = '#666';
 
-            // Select and copy the text when the input field is clicked
             inputFieldForCopy.addEventListener('click', function() {
                 this.select();
                 document.execCommand('copy');
                 alert('Link copied to clipboard!');
             });
+            sendIframeHeight(); // लिंक जनरेट होने के बाद ऊंचाई अपडेट करें
         }
 
         // Helper function to get URL parameters
@@ -435,6 +326,43 @@
             if (!results[2]) return '';
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
+
+        // --- नया कोड यहाँ से शुरू होता है ---
+        // यह फ़ंक्शन पैरेंट को iframe की ऊंचाई भेजता है
+        function sendIframeHeight() {
+            const body = document.body;
+            //scrollHeight बॉडी के कंटेंट की कुल ऊंचाई देगा, भले ही वह ओवरफ्लो हो रहा हो
+            const contentHeight = body.scrollHeight; 
+            
+            // 'YOUR_WORDPRESS_SITE_DOMAIN_HERE' को अपनी वास्तविक WordPress वेबसाइट के डोमेन से बदलें
+            const targetOrigin = 'YOUR_WORDPRESS_SITE_DOMAIN_HERE'; // उदाहरण: 'https://www.yourwebsite.com'
+
+            if (window.parent) { // सुनिश्चित करें कि iframe parent में है
+                window.parent.postMessage({
+                    frameHeight: contentHeight + 10 // कुछ अतिरिक्त पैडिंग जोड़ें ताकि नीचे कुछ जगह रहे
+                }, targetOrigin);
+            }
+        }
+
+        // किसी भी DOM परिवर्तन पर ऊंचाई भेजने के लिए एक ऑब्जर्वर
+        // यह सुनिश्चित करता है कि जब भी कंटेंट बदले (जैसे रिजल्ट दिखने पर), ऊंचाई अपडेट हो जाए
+        const resizeObserver = new ResizeObserver(() => {
+            sendIframeHeight();
+        });
+
+        const calculatorContainer = document.getElementById('age_calculator_section');
+        if (calculatorContainer) {
+            resizeObserver.observe(calculatorContainer);
+        }
+
+        // कुछ महत्वपूर्ण इवेंट्स पर भी ऊंचाई भेजें
+        window.addEventListener('load', sendIframeHeight);
+        window.addEventListener('resize', sendIframeHeight); // विंडो के साइज़ बदलने पर
+        // DOM में कुछ सेकंड बाद फिर से जांचें (कभी-कभी सभी फॉन्ट/इमेज लोड होने में समय लगता है)
+        setTimeout(sendIframeHeight, 500); 
+        setTimeout(sendIframeHeight, 2000); 
+
+        // --- नया कोड यहाँ समाप्त होता है ---
     </script>
 </body>
 </html>
