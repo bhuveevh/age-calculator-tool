@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detailed Age Calculator</title>
+    <style>
+        /* CSS for the calculator's appearance */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4; /* Light background for the iframe content */
+            display: flex; /* Helps center the calculator */
+            justify-content: center;
+            align-items: flex-start; /* Align to the top */
+            min-height: calc(100vh - 40px); /* Adjust height for padding */
+            box-sizing: border-box; /* Include padding in height calculation */
+        }
+        .calculator-container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 100%; /* Ensure it takes full width up to max-width */
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin: 0; /* Remove default margins if any from body flex */
+        }
+        h3 {
+            color: #333;
+            margin-top: 0;
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+        }
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .input-field {
+            flex: 1 1 48%; /* Allows two fields per row on larger screens */
+            min-width: 280px; /* Ensures fields don't get too small */
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+            font-size: 1.1em;
+        }
+        input[type="date"] {
+            width: calc(100% - 20px); /* Account for padding */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+        button {
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            width: 100%;
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px; /* Added margin */
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        .calculate-btn {
+            background-color: #28a745;
+        }
+        .generate-link-btn {
+            background-color: #007bff;
+            padding: 10px 18px; /* Slightly smaller padding for link button */
+            font-size: 1em;
+        }
+        #detailed_error_revised {
+            color: red;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.95em;
+        }
+        #detailed_result_revised {
+            margin-top: 25px;
+        }
+        .link-generator-section {
+            margin-top: 25px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+        table th, table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        table th {
+            background-color: #f2f2f2;
+            font-size: 1.1em;
+            color: #333;
+        }
+        table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        #generated_link_input_revised {
+            width: calc(100% - 10px); /* Adjust for padding in its own styling */
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 0.9em;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        #generated_link_text_revised {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+            word-break: break-all; /* Ensures long links don't break layout */
+        }
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .input-field {
+                flex: 1 1 100%; /* Stack inputs on small screens */
+                min-width: unset; /* Remove min-width constraint */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container" id="age_calculator_section">
+        <h3>Detailed Age Calculator</h3>
+
+        <div class="input-group">
+            <div class="input-field">
+                <label for="dob_date_revised">Date of Birth:</label>
+                <input type="date" id="dob_date_revised">
+            </div>
+            <div class="input-field">
+                <label for="find_age_on_date_revised">Find Age on:</label>
+                <input type="date" id="find_age_on_date_revised">
+            </div>
+        </div>
+
+        <button onclick="calculateDetailedAgeRevised()" class="calculate-btn">Calculate Age</button>
+
+        <div id="detailed_error_revised"></div>
+
+        <div id="detailed_result_revised">
+            </div>
+
+        <div class="link-generator-section">
+            <label for="link_dob_date_revised">Generate Link to check Age:</label>
+            <input type="date" id="link_dob_date_revised">
+            <p id="generated_link_text_revised"></p>
+            <button onclick="generateAgeLinkRevised()" class="generate-link-btn">Generate Link</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const todayString = `${year}-${month}-${day}`;
+
+            const findAgeOnInput = document.getElementById('find_age_on_date_revised');
+            if (findAgeOnInput) {
+                findAgeOnInput.value = todayString;
+            }
+
+            const linkDobInput = document.getElementById('link_dob_date_revised');
+            if (linkDobInput) {
+                linkDobInput.value = todayString;
+            }
+
+            // Attempt to pre-fill DOB from URL on page load
+            const initialDob = getUrlParameterRevised('dob_revised');
+            const dobDateInput = document.getElementById('dob_date_revised');
+            if (initialDob && dobDateInput) {
+                dobDateInput.value = initialDob;
+                // If a DOB is provided in the URL, calculate age automatically
+                calculateDetailedAgeRevised();
+            }
+        });
+
+        // Main calculation function
+        function calculateDetailedAgeRevised() {
+            const dobInput = document.getElementById('dob_date_revised');
+            const findAgeOnInput = document.getElementById('find_age_on_date_revised');
+            const resultDiv = document.getElementById('detailed_result_revised');
+            const errorDiv = document.getElementById('detailed_error_revised');
+
+            resultDiv.innerHTML = '';
+            errorDiv.textContent = '';
+
+            const dobValue = dobInput ? dobInput.value : '';
+            const targetDateValue = findAgeOnInput ? findAgeOnInput.value : '';
+
+            if (!dobValue) {
+                errorDiv.textContent = 'Please enter a valid Date of Birth.';
+                return;
+            }
+            if (!targetDateValue) {
+                errorDiv.textContent = 'Please enter a valid "Find Age on" date.';
+                return;
+            }
+
+            const dob = new Date(dobValue);
+            const targetDate = new Date(targetDateValue);
+
+            dob.setHours(0, 0, 0, 0); // Normalize to start of the day
+            targetDate.setHours(0, 0, 0, 0); // Normalize to start of the day
+
+            if (dob > targetDate) {
+                errorDiv.textContent = 'Date of Birth cannot be after the "Find Age on" date.';
+                return;
+            }
+
+            // --- Age Calculation (Years, Months, Days) ---
+            let years = targetDate.getFullYear() - dob.getFullYear();
+            let months = targetDate.getMonth() - dob.getMonth();
+            let days = targetDate.getDate() - dob.getDate();
+
+            if (days < 0) {
+                months--;
+                // Get the number of days in the previous month relative to the target date
+                const prevMonthDate = new Date(targetDate.getFullYear(), targetDate.getMonth(), 0);
+                days += prevMonthDate.getDate();
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            // --- Age in different time units (Approximate) ---
+            const totalMilliseconds = targetDate.getTime() - dob.getTime();
+            const msInDay = 1000 * 60 * 60 * 24;
+
+            const totalDays = Math.floor(totalMilliseconds / msInDay);
+            const totalWeeks = Math.floor(totalDays / 7);
+            const remainingDaysAfterWeeks = totalDays % 7;
+
+            // Average days per month is 365.25 / 12 = 30.4375, used for approximation
+            const totalMonthsApprox = Math.floor(totalDays / 30.436875);
+            const decimalYears = (totalDays / 365.25).toFixed(4); // 365.25 for leap years
+
+            const totalHoursApprox = Math.floor(totalMilliseconds / (1000 * 60 * 60));
+            const totalMinutesApprox = Math.floor(totalMilliseconds / (1000 * 60));
+            const totalSecondsApprox = Math.floor(totalMilliseconds / 1000);
+
+
+            // --- Next Birthday/Anniversary ---
+            let nextBirthdayThisYear = new Date(targetDate.getFullYear(), dob.getMonth(), dob.getDate());
+            let daysUntilNextBirthday;
+            let nextBirthdayDateFormatted;
+
+            // If birthday has passed this year, set to next year
+            if (nextBirthdayThisYear < targetDate) {
+                nextBirthdayThisYear.setFullYear(targetDate.getFullYear() + 1);
+            }
+            const diffMs = nextBirthdayThisYear.getTime() - targetDate.getTime();
+            daysUntilNextBirthday = Math.ceil(diffMs / msInDay);
+            nextBirthdayDateFormatted = nextBirthdayThisYear.toLocaleDateString('en-US', { day: 'numeric', month: 'long' });
+
+
+            // --- Age Last Birthday / Next Birthday / Nearest Birthday ---
+            // Age at last birthday
+            let ageLastBirthday = targetDate.getFullYear() - dob.getFullYear();
+            if (targetDate.getMonth() < dob.getMonth() || (targetDate.getMonth() === dob.getMonth() && targetDate.getDate() < dob.getDate())) {
+                ageLastBirthday--;
+            }
+            let ageNextBirthday = ageLastBirthday + 1;
+
+            let ageNearestBirthday = ageLastBirthday; // Default to last birthday
+            // If next birthday is closer (half a year or less)
+            if (daysUntilNextBirthday <= (365.25 / 2) || daysUntilNextBirthday === 0) {
+                ageNearestBirthday = ageNextBirthday;
+            }
+
+
+            // --- Render Results ---
+            let html = `
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.95em;">
+                    <thead>
+                        <tr>
+                            <th colspan="2" style="background-color: #f2f2f2; padding: 10px; border: 1px solid #ddd; text-align: left; font-size: 1.1em; color: #333;">Answer:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold; width: 40%;">Age =</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; color: #007bff; font-weight: bold;">${years} years, ${months} months, ${days} days</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Born on:</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">${dob.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Age on:</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">${targetDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.95em;">
+                    <thead>
+                        <tr>
+                            <th colspan="2" style="background-color: #f2f2f2; padding: 10px; border: 1px solid #ddd; text-align: left; font-size: 1.1em; color: #333;">Age in different time units:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; width: 40%;">= decimal years</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">${decimalYears}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">= years and months and days</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">${years} years, ${months} months, ${days} days</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">= months and days</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">${totalMonthsApprox} months, ${Math.floor(totalDays - (totalMonthsApprox * 30.436875))} days</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">= weeks and days</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">${totalWeeks} weeks, ${remainingDaysAfterWeeks} days</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">= days</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">${totalDays} days</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">≈ hours*</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">${totalHoursApprox.toLocaleString()} hours</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">≈ minutes*</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">${totalMinutesApprox.toLocaleString()} minutes</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">≈ seconds*</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">${totalSecondsApprox.toLocaleString()} seconds</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding: 8px; border: 1px solid #ddd; font-size: 0.9em; color: #666;">* These are approximations. Find exact age in Years, Days, Hours, Minutes and Seconds (requires exact birth time)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.95em;">
+                    <thead>
+                        <tr>
+                            <th colspan="2" style="background-color: #f2f2f2; padding: 10px; border: 1px solid #ddd; text-align: left; font-size: 1.1em; color: #333;">Birthday/Anniversary Details:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; width: 40%;">Days until next birthday:</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">${daysUntilNextBirthday} days (${nextBirthdayDateFormatted})</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Age Last Birthday:</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">${ageLastBirthday} years</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Age Next Birthday:</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">${ageNextBirthday} years</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Age Nearest Birthday:</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">${ageNearestBirthday} years</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            resultDiv.innerHTML = html;
+        }
+
+        // Link generation function
+        function generateAgeLinkRevised() {
+            const linkDobInput = document.getElementById('link_dob_date_revised');
+            const generatedLinkText = document.getElementById('generated_link_text_revised');
+
+            const dobValue = linkDobInput ? linkDobInput.value : '';
+
+            if (!dobValue) {
+                generatedLinkText.textContent = 'Please select a Date of Birth to generate a link.';
+                generatedLinkText.style.color = 'red';
+                return;
+            }
+
+            const currentPageUrl = window.location.href.split('?')[0].split('#')[0];
+            const generatedLink = `${currentPageUrl}?dob_revised=${dobValue}#age_calculator_section`;
+
+            const inputFieldForCopy = document.createElement('input');
+            inputFieldForCopy.type = 'text';
+            inputFieldForCopy.value = generatedLink;
+            inputFieldForCopy.style.cssText = 'width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; font-size: 0.9em; margin-top: 5px;';
+            inputFieldForCopy.readOnly = true;
+            inputFieldForCopy.id = 'generated_link_input_revised'; // Unique ID for the input field
+
+            generatedLinkText.innerHTML = 'Copy this link: ';
+            generatedLinkText.appendChild(inputFieldForCopy);
+            generatedLinkText.style.color = '#666';
+
+            // Select and copy the text when the input field is clicked
+            inputFieldForCopy.addEventListener('click', function() {
+                this.select();
+                document.execCommand('copy');
+                alert('Link copied to clipboard!');
+            });
+        }
+
+        // Helper function to get URL parameters
+        function getUrlParameterRevised(name) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(window.location.href);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+    </script>
+</body>
+</html>
