@@ -5,23 +5,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detailed Age Calculator</title>
     <style>
-        /* आपका मौजूदा CSS यहाँ है */
+        /* पुराना सुंदर UI */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 10px; /* यहाँ पैडिंग को थोड़ा कम करें, ताकि कंटेंट का आकार कम हो */
+            padding: 15px; /* थोड़ी पैडिंग वापस दी ताकि UI बहुत चिपका हुआ न लगे */
             background-color: #f4f4f4;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             box-sizing: border-box;
+            line-height: 1.6; /* पढ़ने में आसानी के लिए */
+            color: #333;
         }
         .calculator-container {
-            /* ... आपके मौजूदा स्टाइल ... */
-            max-width: 600px; /* सुनिश्चित करें कि यह यहाँ भी सेट है */
+            border: 1px solid #ddd;
+            padding: 25px; /* पैडिंग बढ़ाई */
+            border-radius: 10px; /* थोड़ा और गोल */
+            max-width: 600px;
             width: 100%;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* गहरा शैडो */
+            margin: 0;
         }
-        /* ... बाकी CSS ... */
+        h3 {
+            color: #2c3e50; /* गहरा नीला/ग्रे */
+            margin-top: 0;
+            text-align: center;
+            font-size: 2em; /* बड़ा फ़ॉन्ट साइज़ */
+            margin-bottom: 30px; /* ज़्यादा स्पेस */
+            font-weight: 600; /* थोड़ा मोटा */
+        }
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 25px; /* ज़्यादा स्पेस */
+        }
+        .input-field {
+            flex: 1 1 48%;
+            min-width: 280px;
+            margin-bottom: 20px; /* ज़्यादा स्पेस */
+        }
+        label {
+            display: block;
+            margin-bottom: 10px; /* ज़्यादा स्पेस */
+            font-weight: bold;
+            color: #555;
+            font-size: 1.15em; /* थोड़ा बड़ा */
+        }
+        input[type="date"] {
+            width: calc(100% - 22px); /* पैडिंग के लिए एडजस्टमेंट */
+            padding: 12px; /* ज़्यादा पैडिंग */
+            border: 1px solid #c0c0c0; /* हल्का बॉर्डर */
+            border-radius: 6px; /* गोल */
+            font-size: 1.05em;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease; /* ट्रांज़िशन */
+        }
+        input[type="date"]:focus {
+            border-color: #007bff; /* फोकस पर नीला बॉर्डर */
+            outline: none;
+        }
+        button {
+            color: white;
+            padding: 14px 30px; /* ज़्यादा पैडिंग */
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.2em; /* बड़ा फ़ॉन्ट साइज़ */
+            font-weight: 600; /* मोटा फ़ॉन्ट */
+            width: 100%;
+            transition: background-color 0.3s ease, transform 0.2s ease; /* ट्रांज़िशन */
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* बटन पर शैडो */
+        }
+        button:hover {
+            opacity: 0.95;
+            transform: translateY(-2px); /* होवर पर थोड़ा ऊपर */
+        }
+        button:active {
+            transform: translateY(0); /* क्लिक पर वापस */
+        }
+        .calculate-btn {
+            background-color: #28a745; /* हरा */
+        }
+        #detailed_error_revised {
+            color: #dc3545; /* लाल */
+            margin-top: 15px;
+            text-align: center;
+            font-size: 1em;
+            font-weight: bold;
+        }
+        #detailed_result_revised {
+            margin-top: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px; /* ज़्यादा स्पेस */
+            font-size: 0.98em;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* टेबल पर हल्का शैडो */
+            border-radius: 8px; /* टेबल को गोल */
+            overflow: hidden; /* गोल किनारों के लिए */
+        }
+        table th, table td {
+            padding: 12px; /* ज़्यादा पैडिंग */
+            border: 1px solid #e0e0e0; /* हल्का बॉर्डर */
+            text-align: left;
+        }
+        table th {
+            background-color: #e3f2fd; /* मटेरियल ब्लू का हल्का शेड */
+            font-size: 1.15em;
+            color: #1a237e; /* मटेरियल ब्लू का गहरा शेड */
+            font-weight: 700; /* ज़्यादा मोटा */
+        }
+        table td {
+            background-color: #ffffff; /* सफ़ेद बैकग्राउंड */
+            color: #333;
+        }
+        table tbody tr:nth-child(even) td {
+            background-color: #f8f8f8; /* अल्टरनेट रोज़ के लिए हल्का ग्रे */
+        }
+        table tbody tr:hover td {
+            background-color: #f0f8ff; /* होवर पर हल्का नीला */
+        }
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .input-field {
+                flex: 1 1 100%;
+                min-width: unset;
+            }
+            .calculator-container {
+                padding: 15px;
+            }
+            h3 {
+                font-size: 1.7em;
+            }
+            button {
+                font-size: 1.1em;
+                padding: 12px 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -46,16 +171,9 @@
         <div id="detailed_result_revised">
             </div>
 
-        <div class="link-generator-section">
-            <label for="link_dob_date_revised">Generate Link to check Age:</label>
-            <input type="date" id="link_dob_date_revised">
-            <p id="generated_link_text_revised"></p>
-            <button onclick="generateAgeLinkRevised()" class="generate-link-btn">Generate Link</button>
         </div>
-    </div>
 
     <script>
-        // आपका मौजूदा JavaScript कोड यहाँ है (DOMContentLoaded, calculateDetailedAgeRevised, generateAgeLinkRevised, getUrlParameterRevised फंक्शन्स)
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date();
             const year = today.getFullYear();
@@ -68,10 +186,11 @@
                 findAgeOnInput.value = todayString;
             }
 
-            const linkDobInput = document.getElementById('link_dob_date_revised');
-            if (linkDobInput) {
-                linkDobInput.value = todayString;
-            }
+            // linkDobInput अब मौजूद नहीं है, इसलिए इसे हटा दिया गया है
+            // const linkDobInput = document.getElementById('link_dob_date_revised');
+            // if (linkDobInput) {
+            //     linkDobInput.value = todayString;
+            // }
 
             const initialDob = getUrlParameterRevised('dob_revised');
             const dobDateInput = document.getElementById('dob_date_revised');
@@ -80,10 +199,10 @@
                 calculateDetailedAgeRevised();
             }
 
-            sendIframeHeight(); // जब DOM पूरी तरह लोड हो जाए, तो एक बार ऊंचाई भेजें
+            sendIframeHeight();
         });
 
-        // Main calculation function (इसमें `sendIframeHeight()` कॉल जोड़ें)
+        // Main calculation function
         function calculateDetailedAgeRevised() {
             const dobInput = document.getElementById('dob_date_revised');
             const findAgeOnInput = document.getElementById('find_age_on_date_revised');
@@ -98,12 +217,12 @@
 
             if (!dobValue) {
                 errorDiv.textContent = 'Please enter a valid Date of Birth.';
-                sendIframeHeight(); // एरर पर भी ऊंचाई अपडेट करें
+                sendIframeHeight();
                 return;
             }
             if (!targetDateValue) {
                 errorDiv.textContent = 'Please enter a valid "Find Age on" date.';
-                sendIframeHeight(); // एरर पर भी ऊंचाई अपडेट करें
+                sendIframeHeight();
                 return;
             }
 
@@ -115,18 +234,16 @@
 
             if (dob > targetDate) {
                 errorDiv.textContent = 'Date of Birth cannot be after the "Find Age on" date.';
-                sendIframeHeight(); // एरर पर भी ऊंचाई अपडेट करें
+                sendIframeHeight();
                 return;
             }
 
-            // --- Age Calculation (Years, Months, Days) ---
             let years = targetDate.getFullYear() - dob.getFullYear();
             let months = targetDate.getMonth() - dob.getMonth();
             let days = targetDate.getDate() - dob.getDate();
 
             if (days < 0) {
                 months--;
-                // Get the number of days in the previous month relative to the target date
                 const prevMonthDate = new Date(targetDate.getFullYear(), targetDate.getMonth(), 0);
                 days += prevMonthDate.getDate();
             }
@@ -136,7 +253,6 @@
                 months += 12;
             }
 
-            // --- Age in different time units (Approximate) ---
             const totalMilliseconds = targetDate.getTime() - dob.getTime();
             const msInDay = 1000 * 60 * 60 * 24;
 
@@ -144,21 +260,17 @@
             const totalWeeks = Math.floor(totalDays / 7);
             const remainingDaysAfterWeeks = totalDays % 7;
 
-            // Average days per month is 365.25 / 12 = 30.4375, used for approximation
             const totalMonthsApprox = Math.floor(totalDays / 30.436875);
-            const decimalYears = (totalDays / 365.25).toFixed(4); // 365.25 for leap years
+            const decimalYears = (totalDays / 365.25).toFixed(4);
 
             const totalHoursApprox = Math.floor(totalMilliseconds / (1000 * 60 * 60));
             const totalMinutesApprox = Math.floor(totalMilliseconds / (1000 * 60));
             const totalSecondsApprox = Math.floor(totalMilliseconds / 1000);
 
-
-            // --- Next Birthday/Anniversary ---
             let nextBirthdayThisYear = new Date(targetDate.getFullYear(), dob.getMonth(), dob.getDate());
             let daysUntilNextBirthday;
             let nextBirthdayDateFormatted;
 
-            // If birthday has passed this year, set to next year
             if (nextBirthdayThisYear < targetDate) {
                 nextBirthdayThisYear.setFullYear(targetDate.getFullYear() + 1);
             }
@@ -166,156 +278,117 @@
             daysUntilNextBirthday = Math.ceil(diffMs / msInDay);
             nextBirthdayDateFormatted = nextBirthdayThisYear.toLocaleDateString('en-US', { day: 'numeric', month: 'long' });
 
-
-            // --- Age Last Birthday / Next Birthday / Nearest Birthday ---
-            // Age at last birthday
             let ageLastBirthday = targetDate.getFullYear() - dob.getFullYear();
             if (targetDate.getMonth() < dob.getMonth() || (targetDate.getMonth() === dob.getMonth() && targetDate.getDate() < dob.getDate())) {
                 ageLastBirthday--;
             }
             let ageNextBirthday = ageLastBirthday + 1;
 
-            let ageNearestBirthday = ageLastBirthday; // Default to last birthday
-            // If next birthday is closer (half a year or less)
+            let ageNearestBirthday = ageLastBirthday;
             if (daysUntilNextBirthday <= (365.25 / 2) || daysUntilNextBirthday === 0) {
                 ageNearestBirthday = ageNextBirthday;
             }
 
-
-            // --- Render Results ---
             let html = `
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.95em;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 0.98em; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
                     <thead>
                         <tr>
-                            <th colspan="2" style="background-color: #f2f2f2; padding: 10px; border: 1px solid #ddd; text-align: left; font-size: 1.1em; color: #333;">Answer:</th>
+                            <th colspan="2" style="background-color: #e3f2fd; padding: 12px; border: 1px solid #e0e0e0; text-align: left; font-size: 1.15em; color: #1a237e; font-weight: 700;">Answer:</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold; width: 40%;">Age =</td>
-                            <td style="padding: 8px; border: 1px solid #ddd; color: #007bff; font-weight: bold;">${years} years, ${months} months, ${days} days</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; font-weight: bold; width: 40%; background-color: #ffffff;">Age =</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; color: #007bff; font-weight: bold; background-color: #ffffff;">${years} years, ${months} months, ${days} days</td>
+                        </tr>
+                        <tr style="background-color: #f8f8f8;">
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; font-weight: bold;">Born on:</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0;">${dob.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Born on:</td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${dob.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Age on:</td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${targetDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; font-weight: bold; background-color: #ffffff;">Age on:</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">${targetDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</td>
                         </tr>
                     </tbody>
                 </table>
 
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.95em;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 0.98em; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
                     <thead>
                         <tr>
-                            <th colspan="2" style="background-color: #f2f2f2; padding: 10px; border: 1px solid #ddd; text-align: left; font-size: 1.1em; color: #333;">Age in different time units:</th>
+                            <th colspan="2" style="background-color: #e3f2fd; padding: 12px; border: 1px solid #e0e0e0; text-align: left; font-size: 1.15em; color: #1a237e; font-weight: 700;">Age in different time units:</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd; width: 40%;">= decimal years</td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${decimalYears}</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; width: 40%; background-color: #ffffff;">= decimal years</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">${decimalYears}</td>
+                        </tr>
+                        <tr style="background-color: #f8f8f8;">
+                            <td style="padding: 12px; border: 1px solid #e0e0e0;">= years and months and days</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0;">${years} years, ${months} months, ${days} days</td>
                         </tr>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">= years and months and days</td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${years} years, ${months} months, ${days} days</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">= months and days</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">${totalMonthsApprox} months, ${Math.floor(totalDays - (totalMonthsApprox * 30.436875))} days</td>
+                        </tr>
+                        <tr style="background-color: #f8f8f8;">
+                            <td style="padding: 12px; border: 1px solid #e0e0e0;">= weeks and days</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0;">${totalWeeks} weeks, ${remainingDaysAfterWeeks} days</td>
                         </tr>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">= months and days</td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${totalMonthsApprox} months, ${Math.floor(totalDays - (totalMonthsApprox * 30.436875))} days</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">= days</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">${totalDays} days</td>
+                        </tr>
+                        <tr style="background-color: #f8f8f8;">
+                            <td style="padding: 12px; border: 1px solid #e0e0e0;">≈ hours*</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0;">${totalHoursApprox.toLocaleString()} hours</td>
                         </tr>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">= weeks and days</td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${totalWeeks} weeks, ${remainingDaysAfterWeeks} days</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">≈ minutes*</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">${totalMinutesApprox.toLocaleString()} minutes</td>
+                        </tr>
+                        <tr style="background-color: #f8f8f8;">
+                            <td style="padding: 12px; border: 1px solid #e0e0e0;">≈ seconds*</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0;">${totalSecondsApprox.toLocaleString()} seconds</td>
                         </tr>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">= days</td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${totalDays} days</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">≈ hours*</td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${totalHoursApprox.toLocaleString()} hours</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">≈ minutes*</td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${totalMinutesApprox.toLocaleString()} minutes</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">≈ seconds*</td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${totalSecondsApprox.toLocaleString()} seconds</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" style="padding: 8px; border: 1px solid #ddd; font-size: 0.9em; color: #666;">* These are approximations. Find exact age in Years, Days, Hours, Minutes and Seconds (requires exact birth time)</td>
+                            <td colspan="2" style="padding: 12px; border: 1px solid #e0e0e0; font-size: 0.9em; color: #666; background-color: #ffffff;">* These are approximations. Find exact age in Years, Days, Hours, Minutes and Seconds (requires exact birth time)</td>
                         </tr>
                     </tbody>
                 </table>
 
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.95em;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 0.98em; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
                     <thead>
                         <tr>
-                            <th colspan="2" style="background-color: #f2f2f2; padding: 10px; border: 1px solid #ddd; text-align: left; font-size: 1.1em; color: #333;">Birthday/Anniversary Details:</th>
+                            <th colspan="2" style="background-color: #e3f2fd; padding: 12px; border: 1px solid #e0e0e0; text-align: left; font-size: 1.15em; color: #1a237e; font-weight: 700;">Birthday/Anniversary Details:</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd; width: 40%;">Days until next birthday:</td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${daysUntilNextBirthday} days (${nextBirthdayDateFormatted})</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; width: 40%; background-color: #ffffff;">Days until next birthday:</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">${daysUntilNextBirthday} days (${nextBirthdayDateFormatted})</td>
+                        </tr>
+                        <tr style="background-color: #f8f8f8;">
+                            <td style="padding: 12px; border: 1px solid #e0e0e0;">Age Last Birthday:</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0;">${ageLastBirthday} years</td>
                         </tr>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">Age Last Birthday:</td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${ageLastBirthday} years</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">Age Next Birthday:</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">${ageNextBirthday} years</td>
                         </tr>
-                        <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">Age Next Birthday:</td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${ageNextBirthday} years</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">Age Nearest Birthday:</td>
-                            <td style="padding: 8px; border: 1px solid #ddd;">${ageNearestBirthday} years</td>
+                        <tr style="background-color: #f8f8f8;">
+                            <td style="padding: 12px; border: 1px solid #e0e0e0;">Age Nearest Birthday:</td>
+                            <td style="padding: 12px; border: 1px solid #e0e0e0;">${ageNearestBirthday} years</td>
                         </tr>
                     </tbody>
                 </table>
             `;
             resultDiv.innerHTML = html;
-            sendIframeHeight(); // रिजल्ट अपडेट होने के बाद ऊंचाई अपडेट करें
+            sendIframeHeight();
         }
 
-        // Link generation function (इसमें `sendIframeHeight()` कॉल जोड़ें)
-        function generateAgeLinkRevised() {
-            const linkDobInput = document.getElementById('link_dob_date_revised');
-            const generatedLinkText = document.getElementById('generated_link_text_revised');
-
-            const dobValue = linkDobInput ? linkDobInput.value : '';
-
-            if (!dobValue) {
-                generatedLinkText.textContent = 'Please select a Date of Birth to generate a link.';
-                generatedLinkText.style.color = 'red';
-                sendIframeHeight(); // एरर पर भी ऊंचाई अपडेट करें
-                return;
-            }
-
-            const currentPageUrl = window.location.href.split('?')[0].split('#')[0];
-            const generatedLink = `${currentPageUrl}?dob_revised=${dobValue}#age_calculator_section`;
-
-            const inputFieldForCopy = document.createElement('input');
-            inputFieldForCopy.type = 'text';
-            inputFieldForCopy.value = generatedLink;
-            inputFieldForCopy.style.cssText = 'width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 3px; font-size: 0.9em; margin-top: 5px;';
-            inputFieldForCopy.readOnly = true;
-            inputFieldForCopy.id = 'generated_link_input_revised';
-
-            generatedLinkText.innerHTML = 'Copy this link: ';
-            generatedLinkText.appendChild(inputFieldForCopy);
-            generatedLinkText.style.color = '#666';
-
-            inputFieldForCopy.addEventListener('click', function() {
-                this.select();
-                document.execCommand('copy');
-                alert('Link copied to clipboard!');
-            });
-            sendIframeHeight(); // लिंक जनरेट होने के बाद ऊंचाई अपडेट करें
-        }
+        // "Generate Link" फंक्शन हटा दिया गया है
+        // function generateAgeLinkRevised() { ... }
 
         // Helper function to get URL parameters
         function getUrlParameterRevised(name) {
@@ -327,25 +400,21 @@
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
 
-        // --- नया कोड यहाँ से शुरू होता है ---
-        // यह फ़ंक्शन पैरेंट को iframe की ऊंचाई भेजता है
+        // --- PostMessage API के लिए कोड ---
         function sendIframeHeight() {
             const body = document.body;
-            //scrollHeight बॉडी के कंटेंट की कुल ऊंचाई देगा, भले ही वह ओवरफ्लो हो रहा हो
             const contentHeight = body.scrollHeight; 
             
-            // 'YOUR_WORDPRESS_SITE_DOMAIN_HERE' को अपनी वास्तविक WordPress वेबसाइट के डोमेन से बदलें
-            const targetOrigin = 'YOUR_WORDPRESS_SITE_DOMAIN_HERE'; // उदाहरण: 'https://www.yourwebsite.com'
+            // अपनी वास्तविक WordPress वेबसाइट के डोमेन से बदलें
+            const targetOrigin = 'YOUR_WORDPRESS_SITE_DOMAIN_HERE'; 
 
-            if (window.parent) { // सुनिश्चित करें कि iframe parent में है
+            if (window.parent) { 
                 window.parent.postMessage({
-                    frameHeight: contentHeight + 10 // कुछ अतिरिक्त पैडिंग जोड़ें ताकि नीचे कुछ जगह रहे
+                    frameHeight: contentHeight + 10 // कुछ अतिरिक्त पैडिंग/सुरक्षा मार्जिन
                 }, targetOrigin);
             }
         }
 
-        // किसी भी DOM परिवर्तन पर ऊंचाई भेजने के लिए एक ऑब्जर्वर
-        // यह सुनिश्चित करता है कि जब भी कंटेंट बदले (जैसे रिजल्ट दिखने पर), ऊंचाई अपडेट हो जाए
         const resizeObserver = new ResizeObserver(() => {
             sendIframeHeight();
         });
@@ -355,14 +424,13 @@
             resizeObserver.observe(calculatorContainer);
         }
 
-        // कुछ महत्वपूर्ण इवेंट्स पर भी ऊंचाई भेजें
+        // सुनिश्चित करें कि ऊंचाई विभिन्न इवेंट्स पर भेजी जाए
         window.addEventListener('load', sendIframeHeight);
-        window.addEventListener('resize', sendIframeHeight); // विंडो के साइज़ बदलने पर
-        // DOM में कुछ सेकंड बाद फिर से जांचें (कभी-कभी सभी फॉन्ट/इमेज लोड होने में समय लगता है)
+        window.addEventListener('resize', sendIframeHeight);
+        // छोटे टाइमआउट के बाद भी भेजें
         setTimeout(sendIframeHeight, 500); 
         setTimeout(sendIframeHeight, 2000); 
 
-        // --- नया कोड यहाँ समाप्त होता है ---
     </script>
 </body>
 </html>
