@@ -50,11 +50,20 @@
       margin: 0 18px;
     }
     .vh-title {
-      font-weight: 700;
-      font-size: 1.55rem;
+      font-weight: 800;
+      font-size: 2.05rem;
       color: var(--text-main);
       letter-spacing: 0.01em;
-      margin-bottom: 2.1rem;
+      margin-bottom: 0.2rem;
+      margin-top: -0.4rem;
+    }
+    .vh-separator {
+      border: none;
+      border-top: 2.2px solid #e5e7eb;
+      margin: 0.7rem 0 1.5rem 0;
+      width: 80%;
+      align-self: center;
+      border-radius: 2px;
     }
     .vh-form-row {
       display: flex;
@@ -113,11 +122,11 @@
       background: var(--primary-dark);
     }
     .vh-footer {
-      margin-top: 1.7rem;
-      font-size: 0.98rem;
+      margin-top: 1.4rem;
+      font-size: 0.85rem;
       color: #888;
       text-align: center;
-      letter-spacing: 0.015em;
+      letter-spacing: 0.012em;
       user-select: none;
       word-break: break-word;
     }
@@ -126,6 +135,7 @@
       text-decoration: underline;
       font-weight: 600;
       transition: color 0.18s;
+      font-size: 0.93em;
     }
     .vh-footer a:hover {
       color: #d97706;
@@ -154,8 +164,6 @@
       box-shadow: 0 6px 30px rgba(0,0,0,0.13);
       min-width: 260px;
       max-width: 93vw;
-      /* REDUCE HEIGHT BY 20% */
-      /* Previous: height: auto; */
       padding: 1.3rem 1.0rem 0.8rem 1.0rem;
       position: relative;
       display: flex;
@@ -254,8 +262,6 @@
     .popup-birthday strong {
       color: #00796b;
     }
-
-    /* Mindmap Timeline */
     .mindmap-scroll {
       width: 100%;
       margin-top: 1.2em;
@@ -353,7 +359,10 @@
         margin: 0 7px;
       }
       .vh-title {
-        font-size: 1.1rem;
+        font-size: 1.45rem;
+      }
+      .vh-separator {
+        width: 95%;
       }
       button {
         font-size: 1rem;
@@ -380,12 +389,14 @@
       .mindmap-node { min-width: 65px; max-width: 75px; padding: 0.27em 0.1em 0.22em 0.1em; font-size: 0.82em; }
       .mindmap-year { font-size: 0.95em; }
       .mindmap-date { font-size: 0.8em; }
+      .vh-footer { font-size: 0.77rem; }
     }
   </style>
 </head>
 <body>
   <div class="vh-container">
     <div class="vh-title">vH Age Calculator</div>
+    <hr class="vh-separator">
     <form id="ageForm" autocomplete="off">
       <div class="vh-form-row">
         <div class="input-block">
