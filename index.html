@@ -1,425 +1,623 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>vH-Age Calculator</title>
+  <meta charset="UTF-8">
+  <title>vH Age Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    :root {
+      --widget-bg: #fff;
+      --border: #e5e7eb;
+      --primary: #007aff;
+      --primary-dark: #0051a8;
+      --accent: #facc15;
+      --text-main: #1a1a1a;
+      --text-secondary: #555;
+      --radius: 18px;
+      --shadow: 0 2px 16px 0 rgba(60,60,67,0.09), 0 1.5px 3.5px 0 rgba(0,0,0,0.03);
+      --font: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      --popup-close-size: 36px;
+      --popup-close-bg: #f3f6fa;
+      --popup-close-hover: #e0e7ef;
+      --mindmap-node-bg: #fffbe6;
+      --mindmap-node-border: #ffe066;
+      --mindmap-node-active-bg: #facc15;
+      --mindmap-node-active-color: #222;
+      --mindmap-line: #ffd600;
+    }
     body {
-      font-family: Arial, sans-serif;
+      background: #f5f6fa;
+      min-height: 100vh;
       margin: 0;
-      padding: 15px;
-      background-color: #f4f4f4;
+      font-family: var(--font);
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      box-sizing: border-box;
-      line-height: 1.6;
-      color: #333;
+      align-items: center;
     }
-    .calculator-container {
-      border: 1px solid #ddd;
-      padding: 25px;
-      border-radius: 10px;
-      max-width: 600px;
-      width: 100%;
-      background-color: #fff;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      margin: 0;
-    }
-    h3 {
-      color: #2c3e50;
-      margin-top: 0;
+    .vh-container {
+      background: var(--widget-bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2.1rem 2rem 1.3rem 2rem;
+      min-width: 320px;
+      max-width: 96vw;
+      width: 370px;
       text-align: center;
-      font-size: 2em;
-      margin-bottom: 30px;
-      font-weight: 600;
-    }
-    .input-group {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      margin-bottom: 25px;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin: 0 18px;
     }
-    .input-field {
-      flex: 1 1 48%;
-      min-width: 280px;
-      margin-bottom: 20px;
+    .vh-title {
+      font-weight: 700;
+      font-size: 1.55rem;
+      color: var(--text-main);
+      letter-spacing: 0.01em;
+      margin-bottom: 2.1rem;
+    }
+    .vh-form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      margin-bottom: 1.4rem;
+      width: 100%;
+    }
+    .vh-form-row .input-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.3rem;
+      width: 100%;
     }
     label {
+      font-size: 1.07rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      margin-bottom: 0.1rem;
+      text-align: left;
       display: block;
-      margin-bottom: 10px;
-      font-weight: bold;
-      color: #555;
-      font-size: 1.15em;
     }
     input[type="date"] {
-      width: calc(100% - 22px);
-      padding: 12px;
-      border: 1px solid #c0c0c0;
-      border-radius: 6px;
-      font-size: 1.05em;
+      width: 100%;
+      padding: 0.65em 0.89em;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: #f9f9fa;
+      color: var(--text-main);
+      outline: none;
+      transition: border 0.15s;
       box-sizing: border-box;
-      transition: border-color 0.3s ease;
     }
     input[type="date"]:focus {
-      border-color: #007bff;
-      outline: none;
+      border: 1.5px solid var(--primary);
     }
     button {
-      color: white;
-      padding: 14px 30px;
+      padding: 0.62em 2em;
+      font-size: 1.08rem;
       border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1.2em;
-      font-weight: 600;
-      width: 100%;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    button:hover {
-      opacity: 0.95;
-      transform: translateY(-2px);
-    }
-    button:active {
-      transform: translateY(0);
-    }
-    .calculate-btn {
-      background-color: #28a745;
-    }
-    #detailed_error_revised {
-      color: #dc3545;
-      margin-top: 15px;
-      text-align: center;
-      font-size: 1em;
-      font-weight: bold;
-    }
-    #detailed_result_revised {
-      margin-top: 30px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 25px;
-      font-size: 0.98em;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       border-radius: 8px;
-      overflow: hidden;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 1.5px 4px rgba(0,0,0,0.08);
+      margin-top: 0.1rem;
+      margin-bottom: 0.5rem;
+      transition: background 0.17s;
+      letter-spacing: 0.01em;
+      width: 100%;
     }
-    table th, table td {
-      padding: 12px;
-      border: 1px solid #e0e0e0;
-      text-align: left;
+    button:hover, button:focus {
+      background: var(--primary-dark);
     }
-    table th {
-      background-color: #e3f2fd;
-      font-size: 1.15em;
-      color: #1a237e;
+    .vh-footer {
+      margin-top: 1.7rem;
+      font-size: 0.98rem;
+      color: #888;
+      text-align: center;
+      letter-spacing: 0.015em;
+      user-select: none;
+      word-break: break-word;
+    }
+    .vh-footer a {
+      color: var(--primary-dark);
+      text-decoration: underline;
+      font-weight: 600;
+      transition: color 0.18s;
+    }
+    .vh-footer a:hover {
+      color: #d97706;
+    }
+    .popup-overlay {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(44,44,54,0.15);
+      justify-content: center;
+      align-items: center;
+    }
+    .popup-overlay.active {
+      display: flex;
+      animation: fadeIn 0.18s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0;}
+      to { opacity: 1;}
+    }
+    .popup-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.13);
+      min-width: 260px;
+      max-width: 93vw;
+      /* REDUCE HEIGHT BY 20% */
+      /* Previous: height: auto; */
+      padding: 1.3rem 1.0rem 0.8rem 1.0rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: pop 0.19s;
+      overflow: visible;
+    }
+    @keyframes pop {
+      from { transform: scale(0.92);}
+      to { transform: scale(1);}
+    }
+    .popup-card h2 {
+      margin-top: 0;
+      margin-bottom: 0.7rem;
+      color: var(--primary);
+      font-size: 1.1rem;
       font-weight: 700;
+      letter-spacing: 0.01em;
     }
-    table td {
-      background-color: #ffffff;
-      color: #333;
+    .popup-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: var(--popup-close-size);
+      height: var(--popup-close-size);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--popup-close-bg);
+      border: none;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      color: #888;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+      z-index: 10;
+      padding: 0;
+      line-height: 1;
     }
-    table tbody tr:nth-child(even) td {
-      background-color: #f8f8f8;
+    .popup-close:hover, .popup-close:focus {
+      color: var(--primary-dark);
+      background: var(--popup-close-hover);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.11);
     }
-    table tbody tr:hover td {
-      background-color: #f0f8ff;
+    .age-table {
+      margin-top: 0.1rem;
+      border-collapse: collapse;
+      width: 98%;
+      font-size: 0.98rem;
+      box-shadow: 0 1.5px 8px rgba(250,204,21,0.13);
+      background: #f9fafb;
+      overflow: hidden;
+      border-radius: 10px;
     }
-    @media (max-width: 600px) {
-      .input-field {
-        flex: 1 1 100%;
+    .age-table th, .age-table td {
+      padding: 0.55em 0.7em;
+      text-align: center;
+    }
+    .age-table th {
+      background: var(--accent);
+      color: #2d2d2d;
+      font-weight: 600;
+      border-bottom: 2px solid #ffe066;
+      font-size: 1em;
+    }
+    .age-table td {
+      background: #fffbe6;
+      color: #00618a;
+      font-weight: bold;
+      border-bottom: 1px solid #fce96a;
+    }
+    .age-table tr:last-child td {
+      border-bottom: none;
+    }
+    .popup-note {
+      margin-top: 0.7em;
+      font-size: 0.96em;
+      color: #888;
+      text-align: center;
+    }
+    .popup-birthday {
+      margin-top: 1em;
+      width: 100%;
+      text-align: center;
+      background: #e0f7fa;
+      border-radius: 9px;
+      padding: 0.7em 0.4em 0.6em 0.4em;
+      color: #006064;
+      font-size: 0.99em;
+      box-shadow: 0 0.5px 3px rgba(0,0,0,0.07);
+      font-weight: 500;
+    }
+    .popup-birthday strong {
+      color: #00796b;
+    }
+
+    /* Mindmap Timeline */
+    .mindmap-scroll {
+      width: 100%;
+      margin-top: 1.2em;
+      padding-bottom: 0.4em;
+      overflow-x: auto;
+      overflow-y: visible;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-color: #ffe066 #f9f9fa;
+    }
+    .mindmap-timeline {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      min-width: 630px;
+      padding: 0 1em 0.2em 1em;
+      position: relative;
+      height: 90px;
+    }
+    .mindmap-node {
+      position: relative;
+      z-index: 1;
+      min-width: 80px;
+      max-width: 100px;
+      background: var(--mindmap-node-bg);
+      border: 2px solid var(--mindmap-node-border);
+      border-radius: 13px;
+      margin-right: 26px;
+      text-align: center;
+      box-shadow: 0 2px 7px 0 rgba(250,204,21,0.12);
+      padding: 0.48em 0.3em 0.45em 0.3em;
+      font-size: 0.93em;
+      color: #a16207;
+      font-weight: 500;
+      transition: background 0.18s, border 0.18s, color 0.18s;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .mindmap-node.active {
+      background: var(--mindmap-node-active-bg);
+      border: 2.5px solid var(--primary-dark);
+      color: var(--mindmap-node-active-color);
+      font-weight: 700;
+      box-shadow: 0 4px 18px 0 rgba(250,204,21,0.18);
+      transform: scale(1.08);
+      z-index: 2;
+    }
+    .mindmap-node:last-child {
+      margin-right: 0;
+    }
+    .mindmap-year {
+      font-size: 1.06em;
+      font-weight: 700;
+      margin-bottom: 0.25em;
+      color: #e09b00;
+    }
+    .mindmap-date {
+      font-size: 0.92em;
+      color: #999e1c;
+      margin-bottom: 0.03em;
+    }
+    .mindmap-node:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -15px;
+      width: 26px;
+      height: 2.2px;
+      background: linear-gradient(90deg, var(--mindmap-line) 60%, #f9fafb 100%);
+      z-index: 0;
+      border-radius: 2.2px;
+      transform: translateY(-50%);
+    }
+    .mindmap-scroll::-webkit-scrollbar {
+      height: 7px;
+    }
+    .mindmap-scroll::-webkit-scrollbar-thumb {
+      background: #ffe066;
+      border-radius: 4px;
+    }
+    .mindmap-scroll::-webkit-scrollbar-track {
+      background: #f9f9fa;
+    }
+    @media (max-width: 700px) {
+      .mindmap-timeline { min-width: 530px; }
+    }
+    @media (max-width: 500px) {
+      .vh-container {
+        padding: 1.15rem 0.5rem 0.9rem 0.5rem;
         min-width: unset;
+        width: 98vw;
+        margin: 0 7px;
       }
-      .calculator-container {
-        padding: 15px;
-      }
-      h3 {
-        font-size: 1.7em;
+      .vh-title {
+        font-size: 1.1rem;
       }
       button {
-        font-size: 1.1em;
-        padding: 12px 20px;
+        font-size: 1rem;
       }
-    }
-    .footer-credit {
-      text-align: center;
-      margin-top: 40px;
-      font-size: 0.95em;
-      color: #777;
-    }
-    .footer-credit a {
-      color: #007bff;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .footer-credit a:hover {
-      text-decoration: underline;
+      .popup-card {
+        padding: 0.7rem 0.2rem 0.4rem 0.2rem;
+      }
+      .age-table th, .age-table td {
+        padding: 0.37em 0.1em;
+        font-size: 0.89em;
+      }
+      .popup-close {
+        top: 7px;
+        right: 7px;
+        width: 30px;
+        height: 30px;
+        font-size: 1.1rem;
+      }
+      .popup-birthday {
+        font-size: 0.92em;
+        padding: 0.4em 0.1em 0.3em 0.1em;
+      }
+      .mindmap-timeline { min-width: 350px; height: 70px;}
+      .mindmap-node { min-width: 65px; max-width: 75px; padding: 0.27em 0.1em 0.22em 0.1em; font-size: 0.82em; }
+      .mindmap-year { font-size: 0.95em; }
+      .mindmap-date { font-size: 0.8em; }
     }
   </style>
 </head>
 <body>
-  <div class="calculator-container" id="age_calculator_section">
-    <h3>vH-Age Calculator</h3>
-
-    <div class="input-group">
-      <div class="input-field">
-        <label for="dob_date_revised">Date of Birth:</label>
-        <input type="date" id="dob_date_revised" />
+  <div class="vh-container">
+    <div class="vh-title">vH Age Calculator</div>
+    <form id="ageForm" autocomplete="off">
+      <div class="vh-form-row">
+        <div class="input-block">
+          <label for="dob">Date of Birth</label>
+          <input type="date" id="dob" required max="">
+        </div>
+        <div class="input-block">
+          <label for="findon">Find Age on</label>
+          <input type="date" id="findon" required>
+        </div>
       </div>
-      <div class="input-field">
-        <label for="find_age_on_date_revised">Find Age on:</label>
-        <input type="date" id="find_age_on_date_revised" />
-      </div>
-    </div>
-
-    <button onclick="calculateDetailedAgeRevised()" class="calculate-btn">Calculate Age</button>
-
-    <div id="detailed_error_revised"></div>
-    <div id="detailed_result_revised"></div>
-
-    <div class="footer-credit">
-      Developed by <a href="https://vacancyhai.online" target="_blank" rel="noopener noreferrer">VACANCYHAI.ONLINE</a> &nbsp;|&nbsp; Inspired by USERS
+      <button type="submit">Calculate Age</button>
+    </form>
+    <div class="vh-footer">
+      Developed by
+      <a href="https://vacancyhai.online/" target="_blank" rel="noopener">VACANCYHAI.ONLINE</a>
+      &nbsp;|&nbsp; Inspired by USERS
     </div>
   </div>
-
+  <!-- Popup Modal -->
+  <div class="popup-overlay" id="popupOverlay" tabindex="-1">
+    <div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+      <button class="popup-close" id="popupClose" aria-label="Close">&times;</button>
+      <h2 id="popupTitle">Your Age Details</h2>
+      <table class="age-table" id="ageTable">
+        <!-- Age result will be injected here -->
+      </table>
+      <div class="popup-note" id="popupNote"></div>
+      <div class="popup-birthday" id="popupBirthday"></div>
+      <div class="mindmap-scroll" id="mindmapScroll">
+        <div class="mindmap-timeline" id="mindmapTimeline">
+          <!-- Mindmap nodes will be injected here -->
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const today = new Date();
-      const formattedToday = today.toISOString().split("T")[0];
-      const ageOnDateInput = document.getElementById('find_age_on_date_revised');
-      if (ageOnDateInput) ageOnDateInput.value = formattedToday;
+    // Set max for DOB (can't be after today)
+    document.getElementById('dob').max = new Date().toISOString().split('T')[0];
+    // Set default & max for "Find Age on" as today
+    const findOnInput = document.getElementById('findon');
+    const todayISO = new Date().toISOString().split('T')[0];
+    findOnInput.value = todayISO;
+    findOnInput.max = todayISO;
 
-      const dobFromUrl = getUrlParameterRevised('dob_revised');
-      const dobField = document.getElementById('dob_date_revised');
-      if (dobFromUrl && dobField) {
-        dobField.value = dobFromUrl;
-        calculateDetailedAgeRevised();
-      }
+    const popupOverlay = document.getElementById('popupOverlay');
+    const popupClose = document.getElementById('popupClose');
+    const ageTable = document.getElementById('ageTable');
+    const popupNote = document.getElementById('popupNote');
+    const popupBirthday = document.getElementById('popupBirthday');
+    const mindmapTimeline = document.getElementById('mindmapTimeline');
+    const mindmapScroll = document.getElementById('mindmapScroll');
 
-      sendIframeHeight();
+    // Close popup
+    function closePopup() {
+      popupOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    popupClose.onclick = closePopup;
+    popupOverlay.onclick = function(e) {
+      if (e.target === popupOverlay) closePopup();
+    };
+    window.addEventListener('keydown', function(e) {
+      if (e.key === "Escape") closePopup();
     });
 
-      function calculateDetailedAgeRevised() {
-            const dobInput = document.getElementById('dob_date_revised');
-            const findAgeOnInput = document.getElementById('find_age_on_date_revised');
-            const resultDiv = document.getElementById('detailed_result_revised');
-            const errorDiv = document.getElementById('detailed_error_revised');
+    document.getElementById('ageForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const dobVal = document.getElementById('dob').value;
+      const findOnVal = document.getElementById('findon').value;
+      if (!dobVal || !findOnVal) {
+        showPopupError("Please select both dates.");
+        return;
+      }
+      const dob = new Date(dobVal);
+      const findOn = new Date(findOnVal);
 
-            resultDiv.innerHTML = '';
-            errorDiv.textContent = '';
+      if (dob > findOn) {
+        showPopupError("Date of birth cannot be after 'Find Age on' date.");
+        return;
+      }
+      const ageObj = calculateAge(dob, findOn);
+      if (ageObj.years < 0) {
+        showPopupError("Please select valid dates.");
+        return;
+      }
+      // Next birthday calculation
+      const nextBirthdayObj = getNextBirthdayInfo(dob, findOn);
+      showAgePopup(ageObj, dobVal, findOnVal, nextBirthdayObj, dob, findOn);
+    });
 
-            const dobValue = dobInput ? dobInput.value : '';
-            const targetDateValue = findAgeOnInput ? findAgeOnInput.value : '';
+    function calculateAge(dob, refDate) {
+      let years = refDate.getFullYear() - dob.getFullYear();
+      let months = refDate.getMonth() - dob.getMonth();
+      let days = refDate.getDate() - dob.getDate();
 
-            if (!dobValue) {
-                errorDiv.textContent = 'Please enter a valid Date of Birth.';
-                sendIframeHeight();
-                return;
-            }
-            if (!targetDateValue) {
-                errorDiv.textContent = 'Please enter a valid "Find Age on" date.';
-                sendIframeHeight();
-                return;
-            }
+      if (days < 0) {
+        months--;
+        const prevMonth = new Date(refDate.getFullYear(), refDate.getMonth(), 0);
+        days += prevMonth.getDate();
+      }
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+      return { years, months, days };
+    }
 
-            const dob = new Date(dobValue);
-            const targetDate = new Date(targetDateValue);
+    // Find next birthday after the reference date, and age on that date
+    function getNextBirthdayInfo(dob, refDate) {
+      const birthMonth = dob.getMonth();
+      const birthDate = dob.getDate();
 
-            dob.setHours(0, 0, 0, 0);
-            targetDate.setHours(0, 0, 0, 0);
+      let year = refDate.getFullYear();
+      let nextBirthday = new Date(year, birthMonth, birthDate);
 
-            if (dob > targetDate) {
-                errorDiv.textContent = 'Date of Birth cannot be after the "Find Age on" date.';
-                sendIframeHeight();
-                return;
-            }
+      // If birthday this year has already passed or is today, move to next year
+      if (
+        nextBirthday < refDate ||
+        (nextBirthday.getDate() === refDate.getDate() && nextBirthday.getMonth() === refDate.getMonth())
+      ) {
+        year++;
+        nextBirthday = new Date(year, birthMonth, birthDate);
+      }
 
-            let years = targetDate.getFullYear() - dob.getFullYear();
-            let months = targetDate.getMonth() - dob.getMonth();
-            let days = targetDate.getDate() - dob.getDate();
-
-            if (days < 0) {
-                months--;
-                const prevMonthDate = new Date(targetDate.getFullYear(), targetDate.getMonth(), 0);
-                days += prevMonthDate.getDate();
-            }
-
-            if (months < 0) {
-                years--;
-                months += 12;
-            }
-
-            const totalMilliseconds = targetDate.getTime() - dob.getTime();
-            const msInDay = 1000 * 60 * 60 * 24;
-
-            const totalDays = Math.floor(totalMilliseconds / msInDay);
-            const totalWeeks = Math.floor(totalDays / 7);
-            const remainingDaysAfterWeeks = totalDays % 7;
-
-            const totalMonthsApprox = Math.floor(totalDays / 30.436875);
-            const decimalYears = (totalDays / 365.25).toFixed(4);
-
-            const totalHoursApprox = Math.floor(totalMilliseconds / (1000 * 60 * 60));
-            const totalMinutesApprox = Math.floor(totalMilliseconds / (1000 * 60));
-            const totalSecondsApprox = Math.floor(totalMilliseconds / 1000);
-
-            let nextBirthdayThisYear = new Date(targetDate.getFullYear(), dob.getMonth(), dob.getDate());
-            let daysUntilNextBirthday;
-            let nextBirthdayDateFormatted;
-
-            if (nextBirthdayThisYear < targetDate) {
-                nextBirthdayThisYear.setFullYear(targetDate.getFullYear() + 1);
-            }
-            const diffMs = nextBirthdayThisYear.getTime() - targetDate.getTime();
-            daysUntilNextBirthday = Math.ceil(diffMs / msInDay);
-            nextBirthdayDateFormatted = nextBirthdayThisYear.toLocaleDateString('en-US', { day: 'numeric', month: 'long' });
-
-            let ageLastBirthday = targetDate.getFullYear() - dob.getFullYear();
-            if (targetDate.getMonth() < dob.getMonth() || (targetDate.getMonth() === dob.getMonth() && targetDate.getDate() < dob.getDate())) {
-                ageLastBirthday--;
-            }
-            let ageNextBirthday = ageLastBirthday + 1;
-
-            let ageNearestBirthday = ageLastBirthday;
-            if (daysUntilNextBirthday <= (365.25 / 2) || daysUntilNextBirthday === 0) {
-                ageNearestBirthday = ageNextBirthday;
-            }
-
-            let html = `
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 0.98em; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
-                    <thead>
-                        <tr>
-                            <th colspan="2" style="background-color: #e3f2fd; padding: 12px; border: 1px solid #e0e0e0; text-align: left; font-size: 1.15em; color: #1a237e; font-weight: 700;">Answer:</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; font-weight: bold; width: 40%; background-color: #ffffff;">Age =</td>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; color: #007bff; font-weight: bold; background-color: #ffffff;">${years} years, ${months} months, ${days} days</td>
-                        </tr>
-                        <tr style="background-color: #f8f8f8;">
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; font-weight: bold;">Born on:</td>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0;">${dob.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; font-weight: bold; background-color: #ffffff;">Age on:</td>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">${targetDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 0.98em; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
-                    <thead>
-                        <tr>
-                            <th colspan="2" style="background-color: #e3f2fd; padding: 12px; border: 1px solid #e0e0e0; text-align: left; font-size: 1.15em; color: #1a237e; font-weight: 700;">Age in different time units:</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; width: 40%; background-color: #ffffff;">= decimal years</td>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">${decimalYears}</td>
-                        </tr>
-                        <tr style="background-color: #f8f8f8;">
-                            <td style="padding: 12px; border: 1px solid #e0e0e0;">= years and months and days</td>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0;">${years} years, ${months} months, ${days} days</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">= months and days</td>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">${totalMonthsApprox} months, ${Math.floor(totalDays - (totalMonthsApprox * 30.436875))} days</td>
-                        </tr>
-                        <tr style="background-color: #f8f8f8;">
-                            <td style="padding: 12px; border: 1px solid #e0e0e0;">= weeks and days</td>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0;">${totalWeeks} weeks, ${remainingDaysAfterWeeks} days</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">= days</td>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">${totalDays} days</td>
-                        </tr>
-                        <tr style="background-color: #f8f8f8;">
-                            <td style="padding: 12px; border: 1px solid #e0e0e0;">≈ hours*</td>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0;">${totalHoursApprox.toLocaleString()} hours</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">≈ minutes*</td>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">${totalMinutesApprox.toLocaleString()} minutes</td>
-                        </tr>
-                        <tr style="background-color: #f8f8f8;">
-                            <td style="padding: 12px; border: 1px solid #e0e0e0;">≈ seconds*</td>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0;">${totalSecondsApprox.toLocaleString()} seconds</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" style="padding: 12px; border: 1px solid #e0e0e0; font-size: 0.9em; color: #666; background-color: #ffffff;">* These are approximations. Find exact age in Years, Days, Hours, Minutes and Seconds (requires exact birth time)</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 0.98em; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
-                    <thead>
-                        <tr>
-                            <th colspan="2" style="background-color: #e3f2fd; padding: 12px; border: 1px solid #e0e0e0; text-align: left; font-size: 1.15em; color: #1a237e; font-weight: 700;">Birthday/Anniversary Details:</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; width: 40%; background-color: #ffffff;">Days until next birthday:</td>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">${daysUntilNextBirthday} days (${nextBirthdayDateFormatted})</td>
-                        </tr>
-                        <tr style="background-color: #f8f8f8;">
-                            <td style="padding: 12px; border: 1px solid #e0e0e0;">Age Last Birthday:</td>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0;">${ageLastBirthday} years</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">Age Next Birthday:</td>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0; background-color: #ffffff;">${ageNextBirthday} years</td>
-                        </tr>
-                        <tr style="background-color: #f8f8f8;">
-                            <td style="padding: 12px; border: 1px solid #e0e0e0;">Age Nearest Birthday:</td>
-                            <td style="padding: 12px; border: 1px solid #e0e0e0;">${ageNearestBirthday} years</td>
-                        </tr>
-                    </tbody>
-                </table>
-            `;
-            resultDiv.innerHTML = html;
-            sendIframeHeight();
+      // Handle leap year birthdays (Feb 29)
+      if (birthMonth === 1 && birthDate === 29) {
+        // Find next valid leap year
+        while (!(nextBirthday.getMonth() === 1 && nextBirthday.getDate() === 29)) {
+          year++;
+          nextBirthday = new Date(year, birthMonth, 29);
         }
-
-    function getUrlParameterRevised(name) {
-      name = name.replace(/[\[\]]/g, '\\$&');
-      const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
-      const results = regex.exec(window.location.href);
-      if (!results) return null;
-      if (!results[2]) return '';
-      return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    }
-
-    function sendIframeHeight() {
-      const body = document.body;
-      const contentHeight = body.scrollHeight;
-      const targetOrigin = 'https://vacancyhai.online/';
-      if (window.parent) {
-        window.parent.postMessage({
-          frameHeight: contentHeight + 10
-        }, targetOrigin);
       }
+
+      const ageOnNextBirthday = calculateAge(dob, nextBirthday).years;
+      return {
+        date: nextBirthday,
+        age: ageOnNextBirthday
+      };
     }
 
-    const resizeObserver = new ResizeObserver(() => {
-      sendIframeHeight();
-    });
-
-    const container = document.getElementById('age_calculator_section');
-    if (container) {
-      resizeObserver.observe(container);
+    function showPopupError(msg) {
+      ageTable.innerHTML = `<tr><td colspan="3" style="color:#e11d48;background:#fff0f3;">${msg}</td></tr>`;
+      popupNote.textContent = "";
+      popupBirthday.textContent = "";
+      mindmapTimeline.innerHTML = "";
+      popupOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      popupClose.focus();
     }
 
-    window.addEventListener('load', sendIframeHeight);
-    window.addEventListener('resize', sendIframeHeight);
-    setTimeout(sendIframeHeight, 500);
-    setTimeout(sendIframeHeight, 2000);
+    function showAgePopup(ageObj, dobVal, findOnVal, nextBirthdayObj, dob, findOn) {
+      ageTable.innerHTML = `
+        <tr>
+          <th>Years</th>
+          <th>Months</th>
+          <th>Days</th>
+        </tr>
+        <tr>
+          <td>${ageObj.years}</td>
+          <td>${ageObj.months}</td>
+          <td>${ageObj.days}</td>
+        </tr>
+      `;
+      const dobStr = formatDateForNote(dobVal);
+      const findOnStr = formatDateForNote(findOnVal);
+      popupNote.textContent = `From ${dobStr} to ${findOnStr}`;
+
+      // Birthday info
+      let bd = nextBirthdayObj.date;
+      let nextBdayStr = bd ? bd.toLocaleDateString(undefined, {day: '2-digit', month: 'short', year: 'numeric'}) : '';
+      popupBirthday.innerHTML = `
+        <div>
+          <span>Next Birthday: <strong>${nextBdayStr}</strong></span>
+        </div>
+        <div>
+          On your next birthday you will be: <strong>${nextBirthdayObj.age} years</strong>
+        </div>
+      `;
+
+      // MINDMAP: 1 to 40 years
+      let nodes = [];
+      let alreadyActive = false;
+      const findOnTime = findOn.getTime();
+      for (let i = 1; i <= 40; ++i) {
+        let year = dob.getFullYear() + i;
+        let month = dob.getMonth();
+        let date = dob.getDate();
+        // Leap year handling for Feb 29
+        let birthday = new Date(year, month, date);
+        if (dob.getMonth() === 1 && dob.getDate() === 29) {
+          // Find next leap year if this year is not a leap year
+          while (!(birthday.getMonth() === 1 && birthday.getDate() === 29)) {
+            year++;
+            birthday = new Date(year, month, 29);
+          }
+        }
+        let birthdayLabel = birthday.toLocaleDateString(undefined, {day: '2-digit', month: 'short', year: 'numeric'});
+        // Highlight the age that matches the result age (if user currently at that birthday)
+        let isActive = false;
+        // If findOn is between previous and this birthday, or exactly this birthday
+        if (!alreadyActive && findOnTime < birthday.getTime()) {
+          isActive = true;
+          alreadyActive = true;
+        }
+        nodes.push(`<div class="mindmap-node${isActive ? " active" : ""}">
+          <div class="mindmap-year">${i} Year</div>
+          <div class="mindmap-date">${birthdayLabel}</div>
+        </div>`);
+      }
+      mindmapTimeline.innerHTML = nodes.join('');
+      // Scroll to active node
+      setTimeout(() => {
+        let active = mindmapTimeline.querySelector('.mindmap-node.active');
+        if (active) {
+          const scrollParent = mindmapScroll;
+          const left = active.offsetLeft - 40;
+          scrollParent.scrollTo({left: left > 0 ? left : 0, behavior: 'smooth'});
+        }
+      }, 80);
+
+      popupOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      popupClose.focus();
+    }
+
+    function formatDateForNote(val) {
+      // Format YYYY-MM-DD to DD MMM YYYY
+      const d = new Date(val);
+      if (isNaN(d)) return val;
+      return d.toLocaleDateString(undefined, {day: '2-digit', month: 'short', year: 'numeric'});
+    }
   </script>
 </body>
 </html>
